@@ -24,14 +24,14 @@ git clone https://github.com/soterinsights/speedtest.git
 
 
 #start the app now
-sudo -u ec2-user bash /home/ec2-user/runspeedtestapp.bash
+sudo -u ec2-user bash /home/ec2-user/setupspeedtest/runspeedtestapp.bash
 
 
 
 ##update /etc/rc.local   So it starts at boot
 echo "" | sudo tee --append /etc/rc.local
 echo "###################### START: ADDED BY setup_speedtest_server.bash ######################" | sudo tee --append /etc/rc.local
-echo "sudo -u ec2-user bash /home/ec2-user/runspeedtestapp.bash" | sudo tee --append /etc/rc.local
+echo "sudo -u ec2-user bash /home/ec2-user/setupspeedtest/runspeedtestapp.bash" | sudo tee --append /etc/rc.local
 echo "" | sudo tee --append /etc/rc.local
 echo "###################### END: ADDED BY setup_speedtest_server.bash ######################" | sudo tee --append /etc/rc.local
 
