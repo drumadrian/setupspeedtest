@@ -1,4 +1,11 @@
+Notes: 
 
+https://stackoverflow.com/questions/84882/sudo-echo-something-etc-privilegedfile-doesnt-work-is-there-an-alterna
+http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html
+https://superuser.com/questions/93385/run-part-of-a-bash-script-as-a-different-user
+https://stackoverflow.com/questions/7642674/how-do-i-script-a-yes-response-for-installing-programs
+https://github.com/soterinsights/speedtest
+https://github.com/drumadrian/setupspeedtest
 
 
 #Install tools
