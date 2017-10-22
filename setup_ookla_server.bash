@@ -1,3 +1,10 @@
+Notes: 
+
+http://www.ookla.com/hosttester.php
+http://www.ookla.com/host
+
+
+
 
 
 
