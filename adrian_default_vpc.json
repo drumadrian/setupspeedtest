@@ -23,6 +23,7 @@
     "subnetd2d5459a": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
+        "MapPublicIpOnLaunch" : "true",
         "CidrBlock": "10.5.1.0/24",
         "AvailabilityZone": "us-west-2a",
         "VpcId": {
@@ -43,6 +44,7 @@
     "subneta8b5c5ce": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
+        "MapPublicIpOnLaunch" : "true",
         "CidrBlock": "10.5.2.0/24",
         "AvailabilityZone": "us-west-2b",
         "VpcId": {
@@ -63,6 +65,7 @@
     "subnete5685abe": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
+        "MapPublicIpOnLaunch" : "true",
         "CidrBlock": "10.5.3.0/24",
         "AvailabilityZone": "us-west-2c",
         "VpcId": {
@@ -101,20 +104,6 @@
         "DomainName": "us-west-2.compute.internal",
         "DomainNameServers": [
           "AmazonProvidedDNS"
-        ]
-      }
-    },
-    "acl821318e4": {
-      "Type": "AWS::EC2::NetworkAcl",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpca77107c1"
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "mycloud  Default ACL"
-          }
         ]
       }
     },
@@ -198,21 +187,6 @@
           {
             "Key": "Name",
             "Value": "mycloud Private Route Table"
-          }
-        ]
-      }
-    },
-    "sgdefault": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "default VPC security group",
-        "VpcId": {
-          "Ref": "vpca77107c1"
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "mycloudVPC Default Security Group"
           }
         ]
       }
