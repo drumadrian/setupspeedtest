@@ -1,0 +1,652 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "vpca77107c1": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.5.0.0/16",
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC"
+          },
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          }
+        ]
+      }
+    },
+    "subnetd2d5459a": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.5.1.0/24",
+        "AvailabilityZone": "us-west-2a",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud subnet 1 - Public"
+          },
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          }
+        ]
+      }
+    },
+    "subneta8b5c5ce": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.5.2.0/24",
+        "AvailabilityZone": "us-west-2b",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud subnet 2 - Public"
+          },
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          }
+        ]
+      }
+    },
+    "subnete5685abe": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.5.3.0/24",
+        "AvailabilityZone": "us-west-2c",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud subnet 3 - Private"
+          },
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          }
+        ]
+      }
+    },
+    "igw78551e1f": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          },
+          {
+            "Key": "Name",
+            "Value": "mycloudIGW"
+          }
+        ]
+      }
+    },
+    "dopt3c2b315e": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": "us-west-2.compute.internal",
+        "DomainNameServers": [
+          "AmazonProvidedDNS"
+        ]
+      }
+    },
+    "acl821318e4": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud  Default ACL"
+          }
+        ]
+      }
+    },
+    "acl0cd01b75": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud Subnet 1 ACL"
+          }
+        ]
+      }
+    },
+    "aclf9d41f80": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud Subnet 3 ACL"
+          }
+        ]
+      }
+    },
+    "acl0dd01b74": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud Subnet 2 ACL"
+          }
+        ]
+      }
+    },
+    "rtbc94896b0": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "main default route table mycloudVPC"
+          }
+        ]
+      }
+    },
+    "rtb0f64ba76": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud Public Route Table"
+          }
+        ]
+      }
+    },
+    "rtbe1984198": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloud Private Route Table"
+          }
+        ]
+      }
+    },
+    "sgdefault": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "default VPC security group",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Default Security Group"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCDatabaseSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC Database Security Group",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Database Security Group"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCSecurityGroup1": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC Security Group 1",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Security Group 1"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCSecurityGroup3": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC Security Group 3",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Security Group 3"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCASGSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC ASG Security Group",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC ASG Security Group"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCSecurityGroup2": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC Security Group 2",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Security Group 2"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCELBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC ELB Security Group",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC ELB Security Group"
+          }
+        ]
+      }
+    },
+    "sgmycloudVPCRemoteAdminSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "mycloudVPC Remote Admin Security Group",
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "mycloudVPC Remote Admin Security Group"
+          }
+        ]
+      }
+    },
+    "acl1": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl0cd01b75"
+        }
+      }
+    },
+    "acl2": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl0cd01b75"
+        }
+      }
+    },
+    "acl3": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "aclf9d41f80"
+        }
+      }
+    },
+    "acl4": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "aclf9d41f80"
+        }
+      }
+    },
+    "acl5": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl0dd01b74"
+        }
+      }
+    },
+    "acl6": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl0dd01b74"
+        }
+      }
+    },
+    "subnetacl1": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl0cd01b75"
+        },
+        "SubnetId": {
+          "Ref": "subnetd2d5459a"
+        }
+      }
+    },
+    "subnetacl2": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "aclf9d41f80"
+        },
+        "SubnetId": {
+          "Ref": "subnete5685abe"
+        }
+      }
+    },
+    "subnetacl3": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl0dd01b74"
+        },
+        "SubnetId": {
+          "Ref": "subneta8b5c5ce"
+        }
+      }
+    },
+    "gw1": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "InternetGatewayId": {
+          "Ref": "igw78551e1f"
+        }
+      }
+    },
+    "subnetroute2": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb0f64ba76"
+        },
+        "SubnetId": {
+          "Ref": "subnetd2d5459a"
+        }
+      }
+    },
+    "subnetroute3": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb0f64ba76"
+        },
+        "SubnetId": {
+          "Ref": "subneta8b5c5ce"
+        }
+      }
+    },
+    "subnetroute4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbe1984198"
+        },
+        "SubnetId": {
+          "Ref": "subnete5685abe"
+        }
+      }
+    },
+    "route1": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "rtb0f64ba76"
+        },
+        "GatewayId": {
+          "Ref": "igw78551e1f"
+        }
+      },
+      "DependsOn": "gw1"
+    },
+    "dchpassoc1": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpca77107c1"
+        },
+        "DhcpOptionsId": {
+          "Ref": "dopt3c2b315e"
+        }
+      }
+    },
+    "ingress1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCDatabaseSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "3306",
+        "ToPort": "3306",
+        "SourceSecurityGroupId": {
+          "Ref": "sgmycloudVPCASGSecurityGroup"
+        },
+        "SourceSecurityGroupOwnerId": "101845606311"
+      }
+    },
+    "ingress2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCASGSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "SourceSecurityGroupId": {
+          "Ref": "sgmycloudVPCELBSecurityGroup"
+        },
+        "SourceSecurityGroupOwnerId": "101845606311"
+      }
+    },
+    "ingress3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCASGSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "SourceSecurityGroupId": {
+          "Ref": "sgmycloudVPCELBSecurityGroup"
+        },
+        "SourceSecurityGroupOwnerId": "101845606311"
+      }
+    },
+    "ingress4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCELBSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "ingress5": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCELBSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "ingress6": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCRemoteAdminSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "71.202.85.255/32"
+      }
+    },
+    "egress1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCDatabaseSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCSecurityGroup1"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCSecurityGroup3"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress4": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCASGSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress5": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCSecurityGroup2"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress6": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCELBSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress7": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgmycloudVPCRemoteAdminSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Description": "adrian standard VPC"
+}
