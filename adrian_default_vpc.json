@@ -20,6 +20,55 @@
         ]
       }
     },
+
+    "elbmycloudELB": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Subnets": [
+          "Ref": "subnetd2d5459a",
+          "Ref": "subneta8b5c5ce"
+        ],
+        "HealthCheck": {
+          "HealthyThreshold": "2",
+          "Interval": "6",
+          "Target": "TCP:80",
+          "Timeout": "5",
+          "UnhealthyThreshold": "2"
+        },
+        "ConnectionDrainingPolicy": {
+          "Enabled": "true",
+          "Timeout": "300"
+        },
+        "ConnectionSettings": {
+          "IdleTimeout": "60"
+        },
+        "CrossZone": "true",
+        "SecurityGroups": [
+          {
+            "Ref": "sgmycloudVPCELBSecurityGroup"
+          }
+        ],
+        "Listeners": [
+          {
+            "InstancePort": "80",
+            "LoadBalancerPort": "80",
+            "Protocol": "TCP",
+            "InstanceProtocol": "TCP"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "created_by",
+            "Value": "adrian_architect"
+          },
+          {
+            "Key": "Name",
+            "Value": "mycloudELB"
+          }
+        ]
+      }
+    },
+
     "subnetd2d5459a": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
