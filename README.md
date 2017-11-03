@@ -17,3 +17,7 @@ Author: Adrian Drummond
 
 ##Details:
 To be documented 
+
+
+##Ookla Setup Instructions 
+

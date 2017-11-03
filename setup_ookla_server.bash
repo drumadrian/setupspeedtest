@@ -1,8 +1,10 @@
+#!/bin/bash
+
 # Notes: 
 
 # http://www.ookla.com/hosttester.php
 # http://www.ookla.com/host
-
+# http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/install-LAMP.html
 
 
 
@@ -39,39 +41,34 @@ sudo echo "###################### END: ADDED BY setup_ookla_server.bash ########
 
 
 
+#Install php and httpd for HTTP based test
+sudo yum update -y
+sudo yum install -y httpd24 php70
+sudo service httpd start
+sudo chkconfig httpd on
+chkconfig --list httpd
+sudo usermod -a -G apache ec2-user
+ls /var/www/
+sudo chown -R ec2-user:apache /var/www
+ls /var/www/
+sudo chmod 2775 /var/www
+find /var/www -type d -exec sudo chmod 2775 {} \;
+find /var/www -type f -exec sudo chmod 0664 {} \;
 
 
 
-#####################################################################################
-#Use the script below to update the server with new code from GitHub
-#####################################################################################
 
 
-# sudo yum install -y git
-
-# #clone code from GitHub
-# cd /home/ec2-user
-# https://github.com/drumadrian/setupspeedtest.git
 
 
-# #clone code from AWS Code Deploy
-# cd /home/ec2-user
-# git clone https://git-codecommit.us-west-2.amazonaws.com/v1/repos/ookla.adrianws.com
 
 
-# #Manually Delete prior code from Code Deploy
-# rm -Rf ookla.adrianws.com/setupspeedtest
 
-# #Manually copy code from GitHub into Code Deploy
-# cp -R setupspeedtest ookla.adrianws.com/.
 
-# #Manually merge code from GitHub into Code Deploy
-# cd ookla.adrianws.code
-# git add -a 
-# git commit -m 'AutoMerge from BLUE code merge server'
 
-# #Manually push code from BLUE code merge server into Code Deploy
-# git push origin master
+
+
+
 
 
 

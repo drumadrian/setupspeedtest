@@ -1,0 +1,113 @@
+﻿{
+  "group": {
+    "name": "ookla.adrianws.com_ASG",
+    "description": "Spot instances for ookla.adrianws.com running behind a load balancer.",
+    "capacity": {
+      "minimum": 1,
+      "maximum": 4,
+      "target": 1,
+      "unit": "instance"
+    },
+    "strategy": {
+      "risk": 100,
+      "onDemandCount": null,
+      "availabilityVsCost": "costOriented",
+      "drainingTimeout": 60,
+      "lifetimePeriod": "days",
+      "fallbackToOd": true,
+      "persistence": {}
+    },
+    "compute": {
+      "instanceTypes": {
+        "ondemand": "t2.large",
+        "spot": [
+          "r4.large",
+          "r4.xlarge",
+          "r4.2xlarge",
+          "r4.4xlarge",
+          "r4.8xlarge"
+        ]
+      },
+      "availabilityZones": [
+        {
+          "name": "us-west-2a",
+          "subnetIds": [
+            "subnet-728d1d3a"
+          ]
+        },
+        {
+          "name": "us-west-2b",
+          "subnetIds": [
+            "subnet-27e99941"
+          ]
+        }
+      ],
+      "product": "Linux/UNIX",
+      "launchSpecification": {
+        "loadBalancersConfig": {
+          "loadBalancers": [
+            {
+              "name": "ookla-adr-elbmyclo-7LX2FUMUV3JL",
+              "type": "CLASSIC"
+            }
+          ]
+        },
+        "healthCheckType": "ELB",
+        "healthCheckGracePeriod": 120,
+        "healthCheckUnhealthyDurationBeforeReplacement": 60,
+        "securityGroupIds": [
+          "sg-5b461a26"
+        ],
+        "monitoring": false,
+        "ebsOptimized": true,
+        "imageId": "ami-8fb872f7",
+        "keyPair": "speedtest",
+        "userData": null,
+        "shutdownScript": null,
+        "tenancy": "default"
+      },
+      "elasticIps": null
+    },
+    "scaling": {
+      "up": [
+        {
+          "policyName": "up Scaling Policy 1",
+          "metricName": "CPUUtilization",
+          "statistic": "average",
+          "unit": "percent",
+          "threshold": 75,
+          "namespace": "AWS/EC2",
+          "period": 300,
+          "evaluationPeriods": 1,
+          "cooldown": 300,
+          "action": {
+            "type": "adjustment",
+            "adjustment": "1"
+          },
+          "operator": "gte"
+        }
+      ],
+      "down": [
+        {
+          "policyName": "down Scaling Policy 1",
+          "metricName": "CPUUtilization",
+          "statistic": "average",
+          "unit": "percent",
+          "threshold": 10,
+          "namespace": "AWS/EC2",
+          "period": 300,
+          "evaluationPeriods": 1,
+          "cooldown": 300,
+          "action": {
+            "type": "adjustment",
+            "adjustment": "1"
+          },
+          "operator": "lte"
+        }
+      ]
+    },
+    "scheduling": {},
+    "thirdPartiesIntegration": {},
+    "multai": null
+  }
+}

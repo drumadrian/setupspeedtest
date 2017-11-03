@@ -1,3 +1,4 @@
+#!/bin/bash
 #Install tools
 sudo yum install -y telnet
 sudo yum install -y git
