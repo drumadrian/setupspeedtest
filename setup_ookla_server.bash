@@ -57,20 +57,18 @@ find /var/www -type f -exec sudo chmod 0664 {} \;
 
 
 
-#Download unpack and setup HTTP based speedtest 
+#Download unpack and setup HTTP based speedtest (after Apache is installed) 
 sudo yum install -y zip unzip
 cd /var/www/html
-
-
-
-
-
-
+wget http://install.speedtest.net/httplegacy/http_legacy_fallback.zip
+unzip http_legacy_fallback.zip
+rm -rf http_legacy_fallback.zip
+cd speedtest/
+rm -rf upload.asp upload.aspx upload.jsp
 sudo chown -R ec2-user:apache /var/www
 sudo chmod 2775 /var/www
 find /var/www -type d -exec sudo chmod 2775 {} \;
 find /var/www -type f -exec sudo chmod 0664 {} \;
-
 
 
 
