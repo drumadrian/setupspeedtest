@@ -1,3 +1,4 @@
+#!/bin/bash
 # Notes: 
 
 # https://stackoverflow.com/questions/84882/sudo-echo-something-etc-privilegedfile-doesnt-work-is-there-an-alterna
@@ -68,10 +69,25 @@ find /var/www -type f -exec sudo chmod 0664 {} \;
 #create 1GB file
 cd /var/www/html
 dd if=/dev/zero of=file.txt count=1048576 bs=1024
+
+#Create healthcheck page and welcome page
 touch healthcheck.html
+echo "Healthy" | sudo tee --append healthcheck.html
 touch index.html
 echo "Hello SpeedTester" | sudo tee --append index.html
-echo "Healthy" | sudo tee --append healthcheck.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo "<a href=http://speedtest.adrianws.com:8080> For HTTP Speed Test click here </a>" | sudo tee --append index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo "<a href=https://speedtest.adrianws.com/file.txt> For HTTPS 1 GB file download click here </a>" | sudo tee --append index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo -e "<br>"  >> index.html
+echo "<a href=http://speedtest.adrianws.com/file.txt> For HTTP 1 GB file download click here </a>" | sudo tee --append index.html
 
 
 #Re-Setup all permissions
