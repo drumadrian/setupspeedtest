@@ -8,8 +8,10 @@
 # https://github.com/soterinsights/speedtest
 # https://github.com/drumadrian/setupspeedtest
 # https://www.skorks.com/2010/03/how-to-quickly-generate-a-large-file-on-the-command-line-with-linux/
+# https://github.com/soterinsights/speedtest/issues/8
 
 #Install tools
+sudo yum update -y 
 sudo yum install -y telnet
 sudo yum install -y git
 
@@ -19,7 +21,7 @@ sudo yum install -y git
 cd /home/ec2-user
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
 . ~/.nvm/nvm.sh
-nvm install 4.4.5
+nvm install 4.5
 
 
 #check node installation
@@ -29,6 +31,7 @@ node -e "console.log('Running Node.js ' + process.version)"
 #download the GitHub Speed Test app
 cd /home/ec2-user
 git clone https://github.com/soterinsights/speedtest.git
+git clone https://github.com/drumadrian/setupspeedtest.git
 
 
 #start the GitHub Speed Test app now
