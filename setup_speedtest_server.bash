@@ -10,6 +10,10 @@
 # https://www.skorks.com/2010/03/how-to-quickly-generate-a-large-file-on-the-command-line-with-linux/
 # https://github.com/soterinsights/speedtest/issues/8
 
+
+
+# REMEMBER:  RUN THIS SCRIPT AS THE ec2-user WHEN LOGGED INTO THE SERVER 
+
 #Install tools
 sudo yum update -y 
 sudo yum install -y telnet
