@@ -6,7 +6,7 @@
 # https://stackoverflow.com/questions/13356628/is-there-a-way-to-redirect-time-output-to-file-in-linux
 # https://unix.stackexchange.com/questions/141211/removing-blank-spaces-and-tabs-from-line-without-messing-with-line-endings
 # http://www.download-time.com/
-
+# https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.upload_file
 
 
 
@@ -72,7 +72,7 @@ echo $speedOf1GBfiledownloadHTTPS
 
 
  
-# Crete item for DynamoDB storage
+# Create item for DynamoDB storage
 echo "{\"time_since_epoch\": {\"S\": \"$speedtestdbkey\"}," > item.json
 echo "\"1GBfiledownload\": {\"S\": \"$speedOf1GBfiledownload\"}", >> item.json
 echo "\"1GBfiledownload_HTTPS\": {\"S\": \"$speedOf1GBfiledownloadHTTPS\"}", >> item.json
@@ -82,10 +82,17 @@ echo "\"maxupload\": {\"S\": \"??\"}", >> item.json
 echo "\"user\": {\"S\": \"$currentuser\"}}" >> item.json
 
 
+cat item.json
 
 #Insert the item into DynamoDB
 # aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item.json
 aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
+
+
+
+
+
+
 
 
 ######################################################################################################
@@ -93,8 +100,66 @@ aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file:
 ######################################################################################################
 
 
+curl -Lo speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+chmod +x speedtest-cli
 
 
+#get the NEW dynamoDB key which represents when the test was run
+speedtestdbkey2="$(date +%s)"
+echo $speedtestdbkey2
+
+testdate2="$(date)"
+echo $testdate2
+
+currentuser2="$(whoami)"
+echo $currentuser2
+
+./speedtest-cli --server 15133 | tee ookla.output.txt
+
+# Sample Output
+# Retrieving speedtest.net configuration...
+# Testing from Cox Communications (174.65.116.21)...
+# Retrieving speedtest.net server list...
+# Selecting best server based on ping...
+# Hosted by 83 Plus Productions (Portland, OR) [1500.20 km]: 58.563 ms
+# Testing download speed................................................................................
+# Download: 144.94 Mbit/s
+# Testing upload speed................................................................................................
+# Upload: 25.33 Mbit/s
+
+
+
+cat ookla.output.txt | grep 'Download:' > ookla.output.txt_Download_line.txt
+ookla_download=$(<ookla.output.txt_Download_line.txt)
+echo $ookla_download
+
+cat ookla.output.txt | grep 'Upload:' > ookla.output.txt_Upload_line.txt
+ookla_upload=$(<ookla.output.txt_Upload_line.txt)
+echo $ookla_upload
+
+cat ookla.output.txt | grep Hosted > ookla.output.txt_Hosted_line.txt
+ookla_host=$(<ookla.output.txt_Hosted_line.txt)
+echo $ookla_host
+
+
+
+
+
+# Create Ookla item for DynamoDB storage
+echo "{\"time_since_epoch\": {\"S\": \"$speedtestdbkey2\"}," > item2.json
+echo "\"1GBfiledownload\": {\"S\": \"??\"}", >> item2.json
+echo "\"ookla_host\": {\"S\": \"$ookla_host\"}", >> item2.json
+echo "\"date\": {\"S\": \"$testdate2\"}", >> item2.json
+echo "\"maxdownload\": {\"S\": \"$ookla_download\"}", >> item2.json
+echo "\"maxupload\": {\"S\": \"$ookla_upload\"}", >> item2.json
+echo "\"user\": {\"S\": \"$currentuser2\"}}" >> item2.json
+
+
+
+cat item2.json
+
+#Insert the Ookla item into DynamoDB
+aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item2.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
 
 
 
