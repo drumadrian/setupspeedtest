@@ -42,3 +42,7 @@ def lambda_handler(event, context):
     s3.meta.client.upload_file('/tmp/index.html', 'data.speedtest.adrianws.com', 'data.html')    
 
     return "Good"
+
+
+
+# https://stackoverflow.com/questions/31011179/converting-json-to-html-table-in-python

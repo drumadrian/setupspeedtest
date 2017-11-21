@@ -7,8 +7,7 @@
 # https://unix.stackexchange.com/questions/141211/removing-blank-spaces-and-tabs-from-line-without-messing-with-line-endings
 # http://www.download-time.com/
 # https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.upload_file
-
-
+# https://github.com/sivel/speedtest-cli
 
 
 ######################################################################################################
@@ -30,7 +29,7 @@
 # cat assume-role-output.json | python -c "import sys, json; print json.load(sys.stdin)['Credentials']['AccessKeyId']"
 
 
-
+# https://stackoverflow.com/questions/21440569/bash-script-use-string-variable-in-curl-json-post-data
 
 
 
@@ -52,8 +51,8 @@ echo $currentuser
 
 
 ###Run the 1GB file download tests and save the times
-{ time curl http://speedtest.adrianws.com/file.txt ; } 2> download_time_output.txt
-{ time curl https://speedtest.adrianws.com/file.txt ; } 2> download_time_output_HTTPS.txt
+# { time curl http://speedtest.adrianws.com/file.txt ; } 2> download_time_output.txt
+# { time curl https://speedtest.adrianws.com/file.txt ; } 2> download_time_output_HTTPS.txt
 
 
 #Format HTTP test time
@@ -114,7 +113,7 @@ echo $testdate2
 currentuser2="$(whoami)"
 echo $currentuser2
 
-./speedtest-cli --server 15133 | tee ookla.output.txt
+# ./speedtest-cli --server 15133 | tee ookla.output.txt
 
 # Sample Output
 # Retrieving speedtest.net configuration...
@@ -161,6 +160,34 @@ cat item2.json
 #Insert the Ookla item into DynamoDB
 aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item2.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
 
+
+
+
+
+
+
+
+#Send Ookla speedtest data to clientapi.speedtest.adrianws.com for entry into DynamoDB
+# https://stackoverflow.com/questions/21440569/bash-script-use-string-variable-in-curl-json-post-data
+
+
+header="Content-Type: application/json"
+FILENAME="/media/file.avi"
+request_body=$(< <(cat <<EOF
+{
+  "jsonrpc": "2.0",
+  "method": "Player.Open",
+  "params": {
+    "item": {
+      "file": "$FILENAME"
+    }
+  }
+}
+EOF
+))
+
+
+curl -i -X POST -H "$header" -d "$request_body" https://clientapi.speedtest.adrianws.com/uploaddata
 
 
 
