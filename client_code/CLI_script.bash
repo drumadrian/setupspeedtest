@@ -8,33 +8,24 @@
 # http://www.download-time.com/
 # https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.upload_file
 # https://github.com/sivel/speedtest-cli
-
-
-######################################################################################################
-##################################    Adrian's Custom SpeedTest     ##################################
-######################################################################################################
-
-
-# # aws sts assume-role --role-arn $role-arn --role-session-name $role-session-name
-
-# role-arn='arn:aws:iam::101845606311:role/speedtest.adrianws.com_user_role'
-# role-session-name='CLI-user-of-speedtest.adrianws.com'
-
-# aws sts assume-role --role-arn $role-arn --role-session-name $role-session-name > assume-role-output.json
-
-# #get the dynamoDB key which represents when the test was run
-# speedtestdbkey="$(date +%s)"
-
-# export PYTHONIOENCODING=utf8
-# cat assume-role-output.json | python -c "import sys, json; print json.load(sys.stdin)['Credentials']['AccessKeyId']"
-
-
+# https://blogs.technet.microsoft.com/rmilne/2015/09/11/how-to-use-nslookup-to-check-dns-txt-record/
+# https://stackoverflow.com/questions/18611903/how-to-pass-payload-via-json-file-for-curl
+# nslookup -q=A shard.adrianws.com
+# https://stackoverflow.com/questions/42813926/passing-bash-variable-to-curl
 # https://stackoverflow.com/questions/21440569/bash-script-use-string-variable-in-curl-json-post-data
 
 
 
 
 
+
+
+
+
+
+######################################################################################################
+##################################    Adrian's Custom SpeedTest     ##################################
+######################################################################################################
 
 
 #get the dynamoDB key which represents when the test was run
@@ -46,8 +37,6 @@ echo $testdate
 
 currentuser="$(whoami)"
 echo $currentuser
-
-
 
 
 ###Run the 1GB file download tests and save the times
@@ -85,7 +74,7 @@ cat item.json
 
 #Insert the item into DynamoDB
 # aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item.json
-aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
+## aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
 
 
 
@@ -141,9 +130,6 @@ ookla_host=$(<ookla.output.txt_Hosted_line.txt)
 echo $ookla_host
 
 
-
-
-
 # Create Ookla item for DynamoDB storage
 echo "{\"time_since_epoch\": {\"S\": \"$speedtestdbkey2\"}," > item2.json
 echo "\"1GBfiledownload\": {\"S\": \"??\"}", >> item2.json
@@ -158,44 +144,28 @@ echo "\"user\": {\"S\": \"$currentuser2\"}}" >> item2.json
 cat item2.json
 
 #Insert the Ookla item into DynamoDB
-aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item2.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
-
-
-
-
-
-
+## aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item2.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
 
 
 #Send Ookla speedtest data to clientapi.speedtest.adrianws.com for entry into DynamoDB
-# https://stackoverflow.com/questions/21440569/bash-script-use-string-variable-in-curl-json-post-data
-
-
-header="Content-Type: application/json"
-FILENAME="/media/file.avi"
-request_body=$(< <(cat <<EOF
-{
-  "jsonrpc": "2.0",
-  "method": "Player.Open",
-  "params": {
-    "item": {
-      "file": "$FILENAME"
-    }
-  }
-}
-EOF
-))
-
-
-curl -i -X POST -H "$header" -d "$request_body" https://clientapi.speedtest.adrianws.com/uploaddata
+api_url="https://f80v3eoklk.execute-api.us-west-2.amazonaws.com/prod/uploaddata"
+# api_url="https://clientapi.speedtest.adrianws.com/prod/uploaddata"
+header1="Content-Type:application/json"
+header2="x-api-key:123"
 
 
 
+curl -v POST \
+--header $header1 \
+--header $header2 \
+-d @item2.json \
+$api_url 
 
 
 
-
-
+echo ""
+echo ""
+echo "COMPLETE"
 
 
 

@@ -13,6 +13,8 @@ from json2html import *
 # https://stackoverflow.com/questions/36780856/complete-scan-of-dynamodb-with-boto3
 # https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.upload_file
 # https://stackoverflow.com/questions/14150854/aws-s3-display-file-inline-instead-of-force-download
+# https://stackoverflow.com/questions/31011179/converting-json-to-html-table-in-python
+# https://stackoverflow.com/questions/34550816/aws-content-type-settings-in-s3-using-boto3
 
 print('Loading function')
 
@@ -51,7 +53,12 @@ def lambda_handler(event, context):
 
 
 
-# https://stackoverflow.com/questions/31011179/converting-json-to-html-table-in-python
+
+
+
+
+
+
 
 
 
