@@ -13,7 +13,7 @@
 # nslookup -q=A shard.adrianws.com
 # https://stackoverflow.com/questions/42813926/passing-bash-variable-to-curl
 # https://stackoverflow.com/questions/21440569/bash-script-use-string-variable-in-curl-json-post-data
-
+# https://askubuntu.com/questions/82616/how-to-execute-command-every-10-seconds-without-cron
 
 
 
@@ -28,6 +28,28 @@
 ######################################################################################################
 
 
+
+echo ""
+echo ""
+echo "BEGIN"
+
+echo "######################################################################################################"
+echo "##################################    Adrian's Custom SpeedTest     ##################################"
+echo "######################################################################################################"
+echo ""
+
+
+# Variables/data structure for dynamoDB data table
+speedtestdbkey="?"
+speedOf1GBfiledownload="?"
+speedOf1GBfiledownloadHTTPS="?"
+ookla_host="?"
+testdate="?"
+maxdownload="?"
+maxupload="?"
+currentuser="?"
+
+
 #get the dynamoDB key which represents when the test was run
 speedtestdbkey="$(date +%s)"
 echo $speedtestdbkey
@@ -40,8 +62,8 @@ echo $currentuser
 
 
 ###Run the 1GB file download tests and save the times
-# { time curl http://speedtest.adrianws.com/file.txt ; } 2> download_time_output.txt
-# { time curl https://speedtest.adrianws.com/file.txt ; } 2> download_time_output_HTTPS.txt
+{ time curl http://speedtest.adrianws.com/file.txt ; } 2> download_time_output.txt
+{ time curl https://speedtest.adrianws.com/file.txt ; } 2> download_time_output_HTTPS.txt
 
 
 #Format HTTP test time
@@ -64,9 +86,10 @@ echo $speedOf1GBfiledownloadHTTPS
 echo "{\"time_since_epoch\": {\"S\": \"$speedtestdbkey\"}," > item.json
 echo "\"1GBfiledownload\": {\"S\": \"$speedOf1GBfiledownload\"}", >> item.json
 echo "\"1GBfiledownload_HTTPS\": {\"S\": \"$speedOf1GBfiledownloadHTTPS\"}", >> item.json
+echo "\"ookla_host\": {\"S\": \"$ookla_host\"}", >> item.json
 echo "\"date\": {\"S\": \"$testdate\"}", >> item.json
-echo "\"maxdownload\": {\"S\": \"??\"}", >> item.json
-echo "\"maxupload\": {\"S\": \"??\"}", >> item.json
+echo "\"maxdownload\": {\"S\": \"$maxdownload\"}", >> item.json
+echo "\"maxupload\": {\"S\": \"$maxupload\"}", >> item.json
 echo "\"user\": {\"S\": \"$currentuser\"}}" >> item.json
 
 
@@ -88,6 +111,23 @@ cat item.json
 ######################################################################################################
 
 
+# RESET Variables/data structure for dynamoDB data table (just in case)
+speedtestdbkey="??"
+speedOf1GBfiledownload="??"
+speedOf1GBfiledownloadHTTPS="??"
+ookla_host="??"
+testdate="??"
+maxdownload="??"
+maxupload="??"
+currentuser="??"
+speedtestdbkey2="?"
+testdate2="?"
+ookla_download="??"
+ookla_upload="??"
+currentuser2="??"
+
+
+# Download the cli tool
 curl -Lo speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
 chmod +x speedtest-cli
 
@@ -102,7 +142,7 @@ echo $testdate2
 currentuser2="$(whoami)"
 echo $currentuser2
 
-# ./speedtest-cli --server 15133 | tee ookla.output.txt
+./speedtest-cli --server 15133 | tee ookla.output.txt
 
 # Sample Output
 # Retrieving speedtest.net configuration...
@@ -114,8 +154,6 @@ echo $currentuser2
 # Download: 144.94 Mbit/s
 # Testing upload speed................................................................................................
 # Upload: 25.33 Mbit/s
-
-
 
 cat ookla.output.txt | grep 'Download:' > ookla.output.txt_Download_line.txt
 ookla_download=$(<ookla.output.txt_Download_line.txt)
@@ -130,9 +168,11 @@ ookla_host=$(<ookla.output.txt_Hosted_line.txt)
 echo $ookla_host
 
 
+
 # Create Ookla item for DynamoDB storage
 echo "{\"time_since_epoch\": {\"S\": \"$speedtestdbkey2\"}," > item2.json
-echo "\"1GBfiledownload\": {\"S\": \"??\"}", >> item2.json
+echo "\"1GBfiledownload\": {\"S\": \"$speedOf1GBfiledownload\"}", >> item2.json
+echo "\"1GBfiledownload_HTTPS\": {\"S\": \"$speedOf1GBfiledownloadHTTPS\"}", >> item2.json
 echo "\"ookla_host\": {\"S\": \"$ookla_host\"}", >> item2.json
 echo "\"date\": {\"S\": \"$testdate2\"}", >> item2.json
 echo "\"maxdownload\": {\"S\": \"$ookla_download\"}", >> item2.json
@@ -140,19 +180,23 @@ echo "\"maxupload\": {\"S\": \"$ookla_upload\"}", >> item2.json
 echo "\"user\": {\"S\": \"$currentuser2\"}}" >> item2.json
 
 
-
 cat item2.json
 
-#Insert the Ookla item into DynamoDB
+#Insert the Adrian SpeedTest and Ookla item into DynamoDB
 ## aws dynamodb put-item --table-name speedtest.adrianws.com_analytics --item file://item2.json --return-consumed-capacity TOTAL --profile speedtest.adrianws.com_profile
 
 
 #Send Ookla speedtest data to clientapi.speedtest.adrianws.com for entry into DynamoDB
 api_url="https://f80v3eoklk.execute-api.us-west-2.amazonaws.com/prod/uploaddata"
-# api_url="https://clientapi.speedtest.adrianws.com/prod/uploaddata"
 header1="Content-Type:application/json"
 header2="x-api-key:123"
 
+
+curl -v POST \
+--header $header1 \
+--header $header2 \
+-d @item.json \
+$api_url 
 
 
 curl -v POST \
@@ -160,7 +204,6 @@ curl -v POST \
 --header $header2 \
 -d @item2.json \
 $api_url 
-
 
 
 echo ""
