@@ -1,0 +1,30 @@
+{
+    "builders": [
+        {
+            "ami_description": "@author: Packer",
+            "ami_name": "Sites-shared-{{timestamp}}",
+            "associate_public_ip_address": true,
+            "iam_instance_profile": "packer",
+            "instance_type": "t2.large",
+            "region": "us-west-2",
+            "source_ami": "ami-d874e0a0",
+            "ssh_username": "ec2-user",
+            "subnet_id": "subnet-c4f9109d",
+            "tags": {
+                "platform": "Sites"
+            },
+            "type": "amazon-ebs",
+            "vpc_id": "vpc-e6cd1083"
+        }
+    ],
+    "provisioners": [
+        {
+            "execute_command": "echo '' | sudo -S su - root -c '{{ .Path }}'",
+            "scripts": [
+                "plat_name.sh",
+                "prebake.sh"
+            ],
+            "type": "shell"
+        }
+    ]
+}
