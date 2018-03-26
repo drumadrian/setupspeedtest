@@ -6,6 +6,7 @@ pipeline {
             steps {
                 ls -lah
             }
+            }
         stage('Build') {
             steps {
                 echo 'Building..'
@@ -15,6 +16,7 @@ pipeline {
             steps {
                 packer build packer-config.json
             }
+        }
         stage('Test') {
             steps {
                 echo 'Testing..'
@@ -26,6 +28,6 @@ pipeline {
             }
         }
     }
-    }
 }
+
 
