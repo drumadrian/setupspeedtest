@@ -11,6 +11,10 @@ pipeline {
                 echo 'Building..'
             }
         }
+        stage('Create AMI') {
+            steps {
+                packer build packer-config.json
+            }
         stage('Test') {
             steps {
                 echo 'Testing..'
