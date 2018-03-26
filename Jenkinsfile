@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Create AMI') {
             steps {
-                /home/ec2-user/packer build packer-config.json
+                sh '/home/ec2-user/packer build packer-config.json'
             }
         }
         stage('Test') {
