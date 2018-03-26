@@ -2,6 +2,10 @@ pipeline {
     agent any
 
     stages {
+        stage('Show directory contents') {
+            steps {
+                ls -lah
+            }
         stage('Build') {
             steps {
                 echo 'Building..'
