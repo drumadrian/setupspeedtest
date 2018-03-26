@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Show directory contents') {
             steps {
-                ls -lah
+                sh 'ls -lah'
             }
         }
         stage('Build') {
@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Create AMI') {
             steps {
-                packer build packer-config.json
+                /home/ec2-user/packer build packer-config.json
             }
         }
         stage('Test') {
