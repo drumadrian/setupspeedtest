@@ -21,7 +21,6 @@
         {
             "execute_command": "echo '' | sudo -S su - root -c '{{ .Path }}'",
             "scripts": [
-                "plat_name.sh",
                 "prebake.sh"
             ],
             "type": "shell"
